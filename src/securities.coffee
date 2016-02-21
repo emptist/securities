@@ -1,3 +1,4 @@
+{hists} = require 'sedata'
 ### 智能化的投資品種,
   根據行情結構,應對最新行情作出相應操作
   將逐步演化完善
@@ -6,8 +7,16 @@
 
 class Security
   constructor: (@代碼,@策略,@百分比=0.0618)->
-    "經過如下處理,@對策function中的this即此證券品種"
+    #在此取得行情,準備好天地線和頂底指標,也可在 observer中做.好處是此處不用再改寫.
+    hists {symbol: @代碼, type:'m05'},(err,json)=>
+      @五分鐘線 = json unless err
+      ### TODO:
+        出錯時換一個數據源再嘗試
+      ###
+      #console.log @代碼
+    #經過如下處理,@對策function中的this即此證券品種
     @對策 = @策略.對策
+
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
   ###合適: (回應)->
     @代碼? and 回應 this
