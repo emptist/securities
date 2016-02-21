@@ -1,2 +1,2 @@
-var Securities = reuire('./lib/securities')
+var Securities = require('./lib/securities')
 module.exports = Securities
