@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/emptist/serobot/issues"
   },
-  "homepage": "https://github.com/emptist/serobot#readme"
+  "homepage": "https://github.com/emptist/serobot#readme",
+  "dependencies": {
+    "sedata": "*"
+  }
 }
