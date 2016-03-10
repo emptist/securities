@@ -44,19 +44,19 @@ class Security
       unless err
         pool = new 池()
         @週線池 = pool.序列(arr)
-      ### TODO:
-        出錯時換一個數據源再嘗試
-      ###
-      # 用週線確定所需的行情片段再獲取日線,以免數據太大
-      # 每隔24小時,在閉市期間更新一次日線數據
-
-      hists {symbol: @代碼, type:'day',len: 5 * @週線池.求主魚長()},(err,arr)=>
-        unless err
-          pool = new 池()
-          @日線池 = pool.序列(arr)
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
+        # 用週線確定所需的行情片段再獲取日線,以免數據太大
+        # 每隔24小時,在閉市期間更新一次日線數據
+
+        hists {symbol: @代碼, type:'day',len: 5 * @週線池.求主魚長()},(err,arr)=>
+          unless err
+            pool = new 池()
+            @日線池 = pool.序列(arr)
+          ### TODO:
+            出錯時換一個數據源再嘗試
+          ###
 
 
   clearIntervalM05: -> clearInterval @iM05
