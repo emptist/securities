@@ -49,6 +49,7 @@ class Security
         ###
         # 用週線確定所需的行情片段再獲取日線,以免數據太大
         # 每隔24小時,在閉市期間更新一次日線數據
+        console.log @周線池
         len = 5 * @週線池.求主魚長()
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
           unless err
