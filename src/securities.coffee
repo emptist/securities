@@ -41,15 +41,16 @@ class Security
 
     # 每一周的週五更新週線數據
     hists {symbol: @代碼, type:'week'},(err,arr)=>
-      unless err
+      unless err?
         pool = new 池()
         @週線池 = pool.序列(arr)
+
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
         # 用週線確定所需的行情片段再獲取日線,以免數據太大
         # 每隔24小時,在閉市期間更新一次日線數據
-        console.log @周線池
+        console.log @週線池
         len = 5 * @週線池.求主魚長()
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
           unless err
