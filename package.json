@@ -1,13 +1,13 @@
 {
   "name": "serobot",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "security robots",
   "main": "index.js",
   "scripts": {
     "preversion": "coffee -bcmo lib src; git commit -am 'modified and re-build js;'",
     "postversion": "git push;",
     "prepublish": "echo 現在發佈",
-    "publish":"cd ..; npm publish serobot",
+    "publish": "cd ..; npm publish serobot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
