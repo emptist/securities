@@ -1,9 +1,15 @@
 {hists} = require 'sedata'
+{池} = require 'seyy'
+
 ### 智能化的投資品種,
   根據行情結構,應對最新行情作出相應操作
   將逐步演化完善
   以下代碼等名目,僅僅是用於對接現有的Python接口,將來系統中都可以統一換成中文
 ###
+
+秒 = 1000
+分鐘 = 60*秒
+小時 = 60*分鐘
 
 class Security
   constructor: (@代碼,@策略,@百分比=0.0618)->
@@ -13,21 +19,50 @@ class Security
 
     ### 在此取得行情,準備好天地線和頂底指標,
       也可在 observer中做.好處是此處不用再改寫.
+      每隔 n分鐘更新一次 n分鐘數據
     ###
-    hists {symbol: @代碼, type:'m05'},(err,json)=>
+    hists {symbol: @代碼, type:'m05'},(err,arr)=>
       unless err
-        @五分鐘線 = json
+        pool = new 池()
+        @五分鐘線池 = pool.序列(arr)
+        updateM05 = hists {symbol: @代碼, type:'m05',len:1},(err,arr) =>
+          unless err
+            unless arr[0] is @五分鐘線池.燭線[-1..][0]
+              @五分鐘池.新燭 arr[0]
+
+        @iM05 = setInterval updateM05, 5*分鐘
+
       ### TODO:
         出錯時換一個數據源再嘗試
       ###
 
-    hists {symbol: @代碼, type:'day',len:300},(err,json)=>
+    # 每隔24小時,在閉市期間更新一次日線數據
+    hists {symbol: @代碼, type:'day'},(err,arr)=>
       unless err
-        @日線 = json
+        pool = new 池()
+        @日線池 = pool.序列(arr)
       ### TODO:
         出錯時換一個數據源再嘗試
       ###
 
+    # 每一周的週五更新週線數據
+    hists {symbol: @代碼, type:'week'},(err,arr)=>
+      unless err
+        pool = new 池()
+        @週線池 = pool.序列(arr)
+      ### TODO:
+        出錯時換一個數據源再嘗試
+      ###
+
+
+  clearIntervalM05: -> clearInterval @iM05
+  clearIntervalDay: -> clearInterval @iDay
+  clearIntervalWeek: -> clearInterval @iWeek
+
+  clearIntervals: ->
+    @clearIntervalM05()
+    @clearIntervalDay()
+    @clearIntervalWeek()
 
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
   ###合適: (回應)->
@@ -62,5 +97,8 @@ class Securities
         @品種[代碼] = new Security(代碼,@策略,0.618)
       @品種[代碼].應對(tick, 回應)
 
+  clearIntervals: ->
+    for each in @品種
+      each.clearIntervals()
 
 module.exports = Securities
