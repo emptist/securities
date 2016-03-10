@@ -25,10 +25,12 @@ class Security
       unless err
         pool = new 池()
         @五分鐘線池 = pool.序列(arr)
-        updateM05 = hists {symbol: @代碼, type:'m05',len:1},(err,arr) =>
-          unless err
-            unless arr[0] is @五分鐘線池.燭線[-1..][0]
-              @五分鐘池.新燭 arr[0]
+
+        updateM05 = ->
+          hists {symbol: @代碼, type:'m05',len:1},(err,arr) ->
+            unless err
+              unless arr[0].day is @五分鐘線池.燭線[-1..][0].day
+                @五分鐘池.新燭 arr[0]
 
         @iM05 = setInterval updateM05, 5*分鐘
 
