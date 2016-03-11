@@ -42,7 +42,7 @@ class Security
     # 每一周的週五更新週線數據
     hists {symbol: @代碼, type:'week'},(err,arr)=>
       if err?
-        console.err err
+        console.error  err
 
       unless arr?
         ### 用週線確定所需的行情片段再獲取日線,以免數據太大
@@ -62,7 +62,9 @@ class Security
         ###
         len = @週線池.求主魚長()*5
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
-          unless err
+          if err
+            console.error @代碼, err
+          else
             pool = new 池()
             @日線池 = pool.序列(arr)
           ### TODO:
