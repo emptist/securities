@@ -40,7 +40,7 @@ class Security
 
 
     # 每一周的週五更新週線數據
-    hists {symbol: @代碼, type:'week'},(err,arr)=>
+    hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
       if err?
         console.error  err
 
