@@ -40,9 +40,19 @@ class Security
 
 
     # 每一周的週五更新週線數據
-    hists {symbol: @代碼, type:'week',len:300},(err,arr)=>
+    hists {symbol: @代碼, type:'week'},(err,arr)=>
+      if err?
+        console.err err
+
       unless arr?
+        ### 用週線確定所需的行情片段再獲取日線,以免數據太大
+        # 每隔24小時,在閉市期間更新一次日線數據
+        #
+        排查發現個別品種下載數據會出錯
+        ###
+
         console.log "#{@代碼} 週線下載不到"
+
       if arr?.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
@@ -50,14 +60,7 @@ class Security
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
-        ### 用週線確定所需的行情片段再獲取日線,以免數據太大
-        # 每隔24小時,在閉市期間更新一次日線數據
-        #
-        排查發現個別品種下載數據會出錯
-        ###
-        unless @週線池.求主魚長?
-          console.log "#{@代碼} 週線數據下載出錯: #{@週線池.尾}"
-        len = (@週線池.求主魚長?()*5) ? 300
+        len = @週線池.求主魚長()*5
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
           unless err
             pool = new 池()
