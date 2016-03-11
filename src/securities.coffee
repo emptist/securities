@@ -53,9 +53,9 @@ class Security
         #
         排查發現個別品種下載數據會出錯
         ###
-        unless @週線池.燭線.length > 1
+        unless @週線池.求主魚長?
           console.log "#{@代碼} 週線數據下載出錯"
-        len = @週線池?.求主魚長() * 5
+        len = (@週線池.求主魚長?()*5) ? 300
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
           unless err
             pool = new 池()
