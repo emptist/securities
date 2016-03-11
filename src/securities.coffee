@@ -40,8 +40,10 @@ class Security
 
 
     # 每一周的週五更新週線數據
-    hists {symbol: @代碼, type:'week'},(err,arr)=>
-      if arr.length > 0
+    hists {symbol: @代碼, type:'week',len:300},(err,arr)=>
+      unless arr?
+        console.log "#{@代碼} 週線下載不到"
+      if arr?.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
 
@@ -54,7 +56,7 @@ class Security
         排查發現個別品種下載數據會出錯
         ###
         unless @週線池.求主魚長?
-          console.log "#{@代碼} 週線數據下載出錯"
+          console.log "#{@代碼} 週線數據下載出錯: #{@週線池.尾}"
         len = (@週線池.求主魚長?()*5) ? 300
         hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
           unless err
