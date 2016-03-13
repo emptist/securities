@@ -111,6 +111,7 @@ class Securities
     for k, tick of jso
       代碼 = tick.代碼
       unless 代碼 in @codes
+        @codes.push 代碼
         @品種[代碼] = new Security(代碼,@策略,0.618)
       @品種[代碼].應對(tick, 回應)
 
