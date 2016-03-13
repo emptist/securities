@@ -13,6 +13,8 @@
 
 class Security
   constructor: (@代碼,@策略,@百分比=0.0618)->
+    if @代碼.length < 6
+      console.error "#{@代碼} 代碼不對"
     ### 經過如下處理,@對策 function中的this即此證券品種
     ###
     @對策 = @策略.對策
