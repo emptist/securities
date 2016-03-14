@@ -32,7 +32,7 @@ class Security
           排查發現個別品種下載數據會出錯
           ###
 
-          console.log "#{@代碼} 5分鐘數據下載不到"
+          console.error  "#{@代碼} 5分鐘數據下載不到"
 
         if arr?.length > 0
           pool = new 池()
@@ -41,7 +41,8 @@ class Security
           updateM05 = ->
             hists {symbol: @代碼, type:'m05',len:1},(err,arr) ->
               unless err
-                unless arr[0].day is @五分鐘線池.燭線[-1..][0].day
+                if arr[0].day isnt @五分鐘線池.燭線[-1..][0].day
+                  console.info '正在 securities updateM05'
                   @五分鐘池.新增 arr[0]
 
           @iM05 = setInterval updateM05, 5*分鐘
@@ -63,7 +64,7 @@ class Security
         排查發現個別品種下載數據會出錯
         ###
 
-        console.log "#{@代碼} 週線下載不到"
+        console.error  "#{@代碼} 週線下載不到"
 
       if arr?.length > 0
         pool = new 池()
@@ -114,7 +115,7 @@ class Security
 ###
 class Securities
   constructor:(@codes, @策略)->
-    console.log '初始代碼表:', @codes
+    #console.log '初始代碼表:', @codes
     #@策略.準備()
     @品種={}
     for code in @codes
@@ -130,8 +131,8 @@ class Securities
   應對: (jso, 回應)->
     for k, tick of jso
       code = tick.代碼
-      console.log 'securities 應對>tick.代碼:',code
       unless code in @codes
+        console.log 'securities 應對 新出現 tick.代碼:',code
         @codes.push code
         @品種[code] = new Security(code,@策略,0.618)
       @品種[code].應對(tick, 回應)
