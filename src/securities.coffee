@@ -120,9 +120,16 @@ class Securities
     for code in @codes
       @品種[code] = new Security(code, @策略, 0.618)
 
+  更新品種:(codes)->
+    for code in codes
+      unless code in @codes
+        @codes.push code
+        @品種[code] = new Security(code,@策略,0.618)
+
   應對: (jso, 回應)->
     for k, tick of jso
       code = tick.代碼
+      console.log 'securities 應對>tick.代碼:',code
       unless code in @codes
         @codes.push code
         @品種[code] = new Security(code,@策略,0.618)
