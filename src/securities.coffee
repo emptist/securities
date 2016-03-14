@@ -25,16 +25,17 @@ class Security
     ###
     hists {symbol: @代碼, type:'m05'},(err,arr)=>
       unless err
-        pool = new 池()
-        @五分鐘線池 = pool.序列(arr)
+        if arr?
+          pool = new 池()
+          @五分鐘線池 = pool.序列(arr)
 
-        updateM05 = ->
-          hists {symbol: @代碼, type:'m05',len:1},(err,arr) ->
-            unless err
-              unless arr[0].day is @五分鐘線池.燭線[-1..][0].day
-                @五分鐘池.新增 arr[0]
+          updateM05 = ->
+            hists {symbol: @代碼, type:'m05',len:1},(err,arr) ->
+              unless err
+                unless arr[0].day is @五分鐘線池.燭線[-1..][0].day
+                  @五分鐘池.新增 arr[0]
 
-        @iM05 = setInterval updateM05, 5*分鐘
+          @iM05 = setInterval updateM05, 5*分鐘
 
       ### TODO:
         出錯時換一個數據源再嘗試
