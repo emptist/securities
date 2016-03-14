@@ -24,6 +24,7 @@ class Security
       每隔 n分鐘更新一次 n分鐘數據
     ###
     hists {symbol: @代碼, type:'m05'},(err,arr)=>
+      代碼 = @代碼
       unless err
         unless arr?
           ### 用週線確定所需的行情片段再獲取日線,以免數據太大
@@ -32,14 +33,14 @@ class Security
           排查發現個別品種下載數據會出錯
           ###
 
-          console.error  "#{@代碼} 5分鐘數據下載不到"
+          console.error  "#{代碼} 5分鐘數據下載不到"
 
         if arr?.length > 0
           pool = new 池()
           @五分鐘線池 = pool.序列(arr)
 
           updateM05 = ->
-            hists {symbol: @代碼, type:'m05',len:1},(err,arr) ->
+            hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
               unless err
                 if arr[0].day isnt @五分鐘線池.燭線[-1..][0].day
                   console.info '正在 securities updateM05'
@@ -125,6 +126,9 @@ class Securities
     if codes?
       for code in codes
         unless code in @codes
+          ### 須檢測 code 是否正常?
+          #if code.length is 6
+          ###
           @codes.push code
           @品種[code] = new Security(code,@策略,0.618)
 
