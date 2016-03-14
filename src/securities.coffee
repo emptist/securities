@@ -116,16 +116,16 @@ class Securities
   constructor:(@codes, @策略)->
     #@策略.準備()
     @品種={}
-    for 代碼 in @codes
-      @品種[代碼] = new Security(代碼,@策略,0.618)
+    for code in @codes
+      @品種[code] = new Security(code, @策略, 0.618)
 
   應對: (jso, 回應)->
     for k, tick of jso
-      代碼 = tick.代碼
-      unless 代碼 in @codes
-        @codes.push 代碼
-        @品種[代碼] = new Security(代碼,@策略,0.618)
-      @品種[代碼].應對(tick, 回應)
+      code = tick.代碼
+      unless code in @codes
+        @codes.push code
+        @品種[code] = new Security(code,@策略,0.618)
+      @品種[code].應對(tick, 回應)
 
   clearIntervals: ->
     for each in @品種
