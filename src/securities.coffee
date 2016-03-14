@@ -121,10 +121,11 @@ class Securities
       @品種[code] = new Security(code, @策略, 0.618)
 
   更新品種:(codes)->
-    for code in codes
-      unless code in @codes
-        @codes.push code
-        @品種[code] = new Security(code,@策略,0.618)
+    if codes?
+      for code in codes
+        unless code in @codes
+          @codes.push code
+          @品種[code] = new Security(code,@策略,0.618)
 
   應對: (jso, 回應)->
     for k, tick of jso
