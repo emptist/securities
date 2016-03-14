@@ -114,6 +114,7 @@ class Security
 ###
 class Securities
   constructor:(@codes, @策略)->
+    console.log '初始代碼表:', @codes
     #@策略.準備()
     @品種={}
     for code in @codes
