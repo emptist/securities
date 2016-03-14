@@ -25,7 +25,16 @@ class Security
     ###
     hists {symbol: @代碼, type:'m05'},(err,arr)=>
       unless err
-        if arr?
+        unless arr?
+          ### 用週線確定所需的行情片段再獲取日線,以免數據太大
+          # 每隔24小時,在閉市期間更新一次日線數據
+          #
+          排查發現個別品種下載數據會出錯
+          ###
+
+          console.log "#{@代碼} 5分鐘數據下載不到"
+
+        if arr?.length > 0
           pool = new 池()
           @五分鐘線池 = pool.序列(arr)
 
