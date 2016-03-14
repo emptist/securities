@@ -129,13 +129,16 @@ class Securities
           @品種[code] = new Security(code,@策略,0.618)
 
   應對: (jso, 回應)->
+    # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
     for k, tick of jso
       code = tick.代碼
       unless code in @codes
         console.log 'securities 應對 新出現 tick.代碼:',code
-        @codes.push code
-        @品種[code] = new Security(code,@策略,0.618)
-      @品種[code].應對(tick, 回應)
+        if code isnt 'sz'
+          @codes.push code
+          @品種[code] = new Security(code,@策略,0.618)
+      if code isnt 'sz'
+        @品種[code].應對(tick, 回應)
 
   clearIntervals: ->
     for each in @品種
