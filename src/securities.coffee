@@ -43,7 +43,7 @@ class Security
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
               unless err
                 if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
-                  console.info '正在 securities updateM05'
+                  console.info '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
 
           #@iM05 = setInterval updateM05, 5*分鐘
