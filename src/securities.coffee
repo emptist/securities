@@ -38,13 +38,13 @@ class Security
         if arr?.length > 0
           pool = new 池()
           @五分鐘線池 = pool.序列(arr)
-
+          五分鐘線池 = @五分鐘線池
           updateM05 = ->
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
               unless err
-                if arr[0].day isnt @五分鐘線池.燭線[-1..][0].day
+                if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
                   console.info '正在 securities updateM05'
-                  @五分鐘池.新增 arr[0]
+                  五分鐘池.新增 arr[0]
 
           @iM05 = setInterval updateM05, 5*分鐘
 
