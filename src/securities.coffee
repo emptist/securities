@@ -88,14 +88,9 @@ class Security
           ###
 
 
-  clearIntervalM05: -> clearInterval @iM05
-  clearIntervalDay: -> clearInterval @iDay
-  clearIntervalWeek: -> clearInterval @iWeek
-
   clearIntervals: ->
-    @clearIntervalM05()
-    @clearIntervalDay()
-    @clearIntervalWeek()
+    for each in [@iM05, @iDay, @iWeek]
+      clearInterval(each)
 
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
   ###合適: (回應)->
@@ -147,7 +142,7 @@ class Securities
         @品種[code].應對(tick, 回應)
 
   clearIntervals: ->
-    for each in @品種
-      each.clearIntervals()
+    for each in @codes
+      @品種[each].clearIntervals()
 
 module.exports = Securities
