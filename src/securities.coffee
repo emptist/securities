@@ -46,7 +46,9 @@ class Security
                   console.info '正在 securities updateM05'
                   五分鐘池.新增 arr[0]
 
-          @iM05 = setInterval updateM05, 5*分鐘
+          #@iM05 = setInterval updateM05, 5*分鐘
+          # 測試故將時間縮短
+          @iM05 = setInterval updateM05, 1*分鐘
 
       ### TODO:
         出錯時換一個數據源再嘗試
