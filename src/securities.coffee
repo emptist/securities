@@ -23,8 +23,9 @@ class Security
       也可在 observer中做.好處是此處不用再改寫.
       每隔 n分鐘更新一次 n分鐘數據
     ###
-    hists {symbol: @代碼, type:'m05'},(err,arr)=>
-      代碼 = @代碼
+    代碼 = @代碼
+    hists {symbol: 代碼, type:'m05'},(err,arr)=>
+      #代碼 = @代碼
       unless err
         unless arr?
           ### 用週線確定所需的行情片段再獲取日線,以免數據太大
@@ -42,8 +43,9 @@ class Security
           updateM05 = ->
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
               unless err
+                console.log 代碼, arr
                 if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
-                  console.info '正在更新五分鐘線池 securities updateM05'
+                  console.log '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
 
           #@iM05 = setInterval updateM05, 5*分鐘
@@ -81,6 +83,15 @@ class Security
           if err
             console.error @代碼, err
           else
+            unless arr?
+              ### 用週線確定所需的行情片段再獲取日線,以免數據太大
+              # 每隔24小時,在閉市期間更新一次日線數據
+              #
+              排查發現個別品種下載數據會出錯
+              ###
+
+              console.error  "#{@代碼} 日線下載不到"
+
             pool = new 池()
             @日線池 = pool.序列(arr)
           ### TODO:
