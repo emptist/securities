@@ -59,46 +59,39 @@ class Security
 
     # 每一周的週五更新週線數據
     hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
+      len = 0
       if err?
-        console.error  err
-
-      unless arr?
-        ### 用週線確定所需的行情片段再獲取日線,以免數據太大
-        # 每隔24小時,在閉市期間更新一次日線數據
-        #
-        排查發現個別品種下載數據會出錯
-        ###
-
-        console.error  "#{@代碼} 週線下載不到"
-
-      if arr?.length > 0
-        pool = new 池()
-        @週線池 = pool.序列(arr)
-
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
+        console.error "securities.coffee >> 63: ", err
+
+      else if arr?.length > 0
+        pool = new 池()
+        @週線池 = pool.序列(arr)
+        #console.log "#{@代碼},週線主魚長: #{len}"#,@週線池.求主魚()
+        ### 用週線確定所需的行情片段再獲取日線,以免數據太大
+        每隔24小時,在閉市期間更新一次日線數據
+        排查發現個別品種下載數據會出錯
+        ###
         len = @週線池.求主魚長()
-        console.log "#{@代碼},週線主魚長: #{len}"#,@週線池.求主魚()
-        hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
-          if err
-            console.error @代碼, err
-          else
-            unless arr?
-              ### 用週線確定所需的行情片段再獲取日線,以免數據太大
-              # 每隔24小時,在閉市期間更新一次日線數據
-              #
-              排查發現個別品種下載數據會出錯
-              ###
 
-              console.error  "#{@代碼} 日線下載不到"
+      hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
+        if err?
+          console.error "securities.coffee >> 81: #{@代碼}", err
+        else
+          unless arr?
+            ### 用週線確定所需的行情片段再獲取日線,以免數據太大
+            # 每隔24小時,在閉市期間更新一次日線數據
+            #
+            排查發現個別品種下載數據會出錯
+            ###
 
-            pool = new 池()
-            @日線池 = pool.序列(arr)
-            console.log "#{@代碼}, #{@日線池.陰魚.尾.均}"
-          ### TODO:
-            出錯時換一個數據源再嘗試
-          ###
+            console.error "securities.coffee >> #{@代碼} 日線下載不到"
+
+          pool = new 池()
+          @日線池 = pool.序列(arr)
+          console.log "securities.coffee >>#{@代碼}, 日線池.陰魚.尾.均: #{@日線池.陰魚.尾.均}"
 
 
   clearIntervals: ->
