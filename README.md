@@ -14,3 +14,5 @@
   for each in @codes
     @品種[each]
   ```
+# throw in JavaScript
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw
