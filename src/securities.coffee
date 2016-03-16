@@ -78,9 +78,9 @@ class Security
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
-        len = @週線池.求主魚長()*5
+        len = @週線池.求主魚長()
         console.log "#{@代碼},週線主魚長: #{len}"
-        hists {symbol: @代碼, type:'day',len: len},(err,arr)=>
+        hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
           if err
             console.error @代碼, err
           else
