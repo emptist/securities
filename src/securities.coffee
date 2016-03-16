@@ -26,9 +26,9 @@ class Security
     代碼 = @代碼
     hists {symbol: 代碼, type:'m05'},(err,arr)=>
       if err
-        i = master.codes.indexOf(@代碼)
-        master.codes.splice(i, 1)
         console.error "securities.coffee >> 29: #{@代碼} 下載5分鐘線", err
+        master.重載(@代碼)
+        
       else
         unless arr?
           ### 用週線確定所需的行情片段再獲取日線,以免數據太大
@@ -62,9 +62,8 @@ class Security
     hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
       len = 0
       if err?
-        i = master.codes.indexOf(@代碼)
-        master.codes.splice(i, 1)
-        console.error "securities.coffee >> 66: #{@代碼} 下載週線", err
+        console.error "securities.coffee >> 65: #{@代碼} 下載週線", err
+        master.重載(@代碼)
       else if arr?.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
@@ -74,12 +73,13 @@ class Security
         排查發現個別品種下載數據會出錯
         ###
         len = @週線池.求主魚長()
+      else
+        master.重載(@代碼)
 
       hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
         if err?
-          i = master.codes.indexOf(@代碼)
-          master.codes.splice(i, 1)
           console.error "securities.coffee >> 81: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
+          master.重載(@代碼)
         else if arr?.length > 0
           pool = new 池()
           @日線池 = pool.序列(arr)
@@ -117,6 +117,9 @@ class Securities
     for code in @codes
       @品種[code] = new Security(this, code, @策略, 0.618)
 
+  重載: (code)->
+    @品種[code] = new Security(this, code, @策略, 0.618)
+
   更新品種:(codes)->
     if codes?
       for code in codes
@@ -125,7 +128,7 @@ class Securities
           #if code.length is 6
           ###
           @codes.push code
-          @品種[code] = new Security(this, code,@策略,0.618)
+          @重載(code)
 
   應對: (jso, 回應)->
     # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
