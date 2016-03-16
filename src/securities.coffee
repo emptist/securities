@@ -61,7 +61,8 @@ class Security
     hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
       len = 0
       if err?
-        master.codes.splice(master.codes.indexOf(@代碼),1)
+        i = master.codes.indexOf(@代碼)
+        master.codes.splice(i, 1)
         console.error "securities.coffee >> 63: #{@代碼} 下載週線", err
       else if arr?.length > 0
         pool = new 池()
@@ -75,8 +76,9 @@ class Security
 
       hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
         if err?
-          master.codes.splice(master.codes.indexOf(@代碼),1)
-          console.error "securities.coffee >> 81: #{@代碼} 下載日線 #{len*5}", err
+          i = master.codes.indexOf(@代碼)
+          master.codes.splice(i, 1)
+          console.error "securities.coffee >> 81: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
         else if arr?.length > 0
           pool = new 池()
           @日線池 = pool.序列(arr)
