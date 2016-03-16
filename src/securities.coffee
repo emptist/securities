@@ -26,17 +26,9 @@ class Security
     代碼 = @代碼
     hists {symbol: 代碼, type:'m05'},(err,arr)=>
       if err
-        console.error "securities.coffee >> 29: #{@代碼} 下載5分鐘線", err
+        console.error "securities.coffee >>: #{@代碼} 下載5分鐘線", err
         master.重載(@代碼)
-        
       else
-        unless arr?
-          ### 用週線確定所需的行情片段再獲取日線,以免數據太大
-          # 每隔24小時,在閉市期間更新一次日線數據
-          排查發現個別品種下載數據會出錯
-          ###
-          console.error  "#{代碼} 5分鐘數據下載不到"
-
         if arr?.length > 0
           pool = new 池()
           @五分鐘線池 = pool.序列(arr)
@@ -44,41 +36,39 @@ class Security
           updateM05 = ->
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
               if err
-                console.error "securities.coffee >> 47: #{@代碼} 更新5分鐘線", err
+                console.error "securities.coffee >>: #{@代碼} 更新5分鐘線", err
               else  if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
                   #console.log '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
-
           #@iM05 = setInterval updateM05, 5*分鐘
           # 測試故將時間縮短
           @iM05 = setInterval updateM05, 5*分鐘
-
-      ### TODO:
-        出錯時換一個數據源再嘗試
-      ###
+        else
+          console.error "securities.coffee >>: #{@代碼} 下載5分鐘線", err
+          master.重載(@代碼)
 
 
     # 每一周的週五更新週線數據
     hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
       len = 0
       if err?
-        console.error "securities.coffee >> 65: #{@代碼} 下載週線", err
+        console.error "securities.coffee >>: #{@代碼} 下載週線", err
         master.重載(@代碼)
       else if arr?.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
-        #console.log "#{@代碼},週線主魚長: #{len}"#,@週線池.求主魚()
         ### 用週線確定所需的行情片段再獲取日線,以免數據太大
         每隔24小時,在閉市期間更新一次日線數據
         排查發現個別品種下載數據會出錯
         ###
-        len = @週線池.求主魚長()
+        len = @週線池.求從魚長() #求主魚長()
       else
+        console.error "securities.coffee >>: #{@代碼} 下載週線", err
         master.重載(@代碼)
 
       hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
         if err?
-          console.error "securities.coffee >> 81: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
+          console.error "securities.coffee >>: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
           master.重載(@代碼)
         else if arr?.length > 0
           pool = new 池()
