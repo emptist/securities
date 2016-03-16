@@ -45,7 +45,7 @@ class Security
               unless err
                 #console.log 代碼, arr
                 if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
-                  console.log '正在更新五分鐘線池 securities updateM05'
+                  #console.log '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
 
           #@iM05 = setInterval updateM05, 5*分鐘
@@ -64,7 +64,7 @@ class Security
         ### TODO:
           出錯時換一個數據源再嘗試
         ###
-        console.error "securities.coffee >> 63: ", err
+        console.error "securities.coffee >> 63: #{@代碼} 下載週線", err
 
       else if arr?.length > 0
         pool = new 池()
@@ -78,7 +78,7 @@ class Security
 
       hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
         if err?
-          console.error "securities.coffee >> 81: #{@代碼}", err
+          console.error "securities.coffee >> 81: #{@代碼} 下載日線", err
         else
           unless arr?
             ### 用週線確定所需的行情片段再獲取日線,以免數據太大
@@ -91,7 +91,7 @@ class Security
 
           pool = new 池()
           @日線池 = pool.序列(arr)
-          console.log "securities.coffee >>#{@代碼}, 日線池.陰魚.尾.均: #{@日線池.陰魚.尾.均}"
+          #console.log "securities.coffee >>#{@代碼}, 日線池.陰魚.尾.均: #{@日線池.陰魚.尾.均}"
 
 
   clearIntervals: ->
