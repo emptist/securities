@@ -25,15 +25,16 @@ class Security
     ###
     代碼 = @代碼
     hists {symbol: 代碼, type:'m05'},(err,arr)=>
-      #代碼 = @代碼
-      unless err
+      if err
+        i = master.codes.indexOf(@代碼)
+        master.codes.splice(i, 1)
+        console.error "securities.coffee >> 29: #{@代碼} 下載5分鐘線", err
+      else
         unless arr?
           ### 用週線確定所需的行情片段再獲取日線,以免數據太大
           # 每隔24小時,在閉市期間更新一次日線數據
-          #
           排查發現個別品種下載數據會出錯
           ###
-
           console.error  "#{代碼} 5分鐘數據下載不到"
 
         if arr?.length > 0
@@ -42,9 +43,9 @@ class Security
           五分鐘線池 = @五分鐘線池
           updateM05 = ->
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
-              unless err
-                #console.log 代碼, arr
-                if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
+              if err
+                console.error "securities.coffee >> 47: #{@代碼} 更新5分鐘線", err
+              else  if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
                   #console.log '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
 
@@ -63,7 +64,7 @@ class Security
       if err?
         i = master.codes.indexOf(@代碼)
         master.codes.splice(i, 1)
-        console.error "securities.coffee >> 63: #{@代碼} 下載週線", err
+        console.error "securities.coffee >> 66: #{@代碼} 下載週線", err
       else if arr?.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
