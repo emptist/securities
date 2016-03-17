@@ -1,6 +1,6 @@
 {
   "name": "serobot",
-  "version": "1.1.45",
+  "version": "1.1.46",
   "description": "security robots",
   "main": "index.js",
   "scripts": {
