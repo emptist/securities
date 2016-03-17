@@ -25,36 +25,36 @@ class Security
     ###
     代碼 = @代碼
     hists {symbol: 代碼, type:'m05'},(err,arr)=>
-      if err
-        console.error "securities.coffee >>: #{@代碼} 下載5分鐘線", err
-        master.重載(@代碼)
+      if err? or not arr?
+        console.error "securities.coffee >>: #{代碼} 下載5分鐘線", err
+        master.重載(代碼)
       else
-        if arr?.length > 0
+        if arr.length > 0
           pool = new 池()
           @五分鐘線池 = pool.序列(arr)
           五分鐘線池 = @五分鐘線池
           updateM05 = ->
             hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
-              if err
-                console.error "securities.coffee >>: #{@代碼} 更新5分鐘線", err
-              else  if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
+              if err? or not arr?
+                console.error "securities.coffee >>: #{代碼} 更新5分鐘線", err
+              else if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
                   #console.log '正在更新五分鐘線池 securities updateM05'
                   五分鐘線池.新增 arr[0]
           #@iM05 = setInterval updateM05, 5*分鐘
           # 測試故將時間縮短
           @iM05 = setInterval updateM05, 5*分鐘
         else
-          console.error "securities.coffee >>: #{@代碼} 下載5分鐘線", err
-          master.重載(@代碼)
+          console.error "securities.coffee >>: #{代碼} 下載5分鐘線", err
+          master.重載(代碼)
 
 
     # 每一周的週五更新週線數據
     hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
       len = 0
-      if err?
+      if err? or not arr?
         console.error "securities.coffee >>: #{@代碼} 下載週線", err
         master.重載(@代碼)
-      else if arr?.length > 0
+      else if arr.length > 0
         pool = new 池()
         @週線池 = pool.序列(arr)
         ### 用週線確定所需的行情片段再獲取日線,以免數據太大
