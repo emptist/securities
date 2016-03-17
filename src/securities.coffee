@@ -67,10 +67,10 @@ class Security
         master.重載(@代碼)
 
       hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
-        if err?
+        if err? or not arr?
           console.error "securities.coffee >>: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
           master.重載(@代碼)
-        else if arr?.length > 0
+        else if arr.length > 0
           pool = new 池()
           @日線池 = pool.序列(arr)
           #console.log "securities.coffee >>#{@代碼}, 日線池.陰魚.尾.均: #{@日線池.陰魚.尾.均}"
@@ -126,9 +126,11 @@ class Securities
       code = tick.代碼
       unless code in @codes
         console.log 'securities 應對 新出現 tick.代碼:',code
+        # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
         if code isnt 'sz'
           @codes.push code
           @品種[code] = new Security(this, code,@策略,0.618)
+      # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
       if code isnt 'sz'
         @品種[code].應對(tick, 回應)
 
