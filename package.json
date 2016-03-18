@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/emptist/serobot#readme",
   "dependencies": {
-    "sedata": "*",
-    "seyy": "git+ssh://git@bitbucket.org/emptist/seyy.git"
+    "sedata": "*"
   }
 }
