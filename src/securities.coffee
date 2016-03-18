@@ -12,7 +12,8 @@
 小時 = 60*分鐘
 
 class Security
-  constructor: (master, @代碼,@策略, 池, @百分比=0.0618)->
+  constructor: (master, @代碼,@策略,@百分比=0.0618)->
+    池 = @策略.池
     if @代碼.length < 6
       console.error "#{@代碼} 代碼不對"
     ### 經過如下處理,@對策 function中的this即此證券品種
@@ -100,15 +101,15 @@ class Security
   @codes: ['135333','xxdge']
 ###
 class Securities
-  constructor:(@codes, @策略, 池)->
+  constructor:(@codes, @策略)->
     #console.log '初始代碼表:', @codes
     #@策略.準備()
     @品種={}
     for code in @codes
-      @品種[code] = new Security(this, code, @策略, 池, 0.618)
+      @品種[code] = new Security(this, code, @策略, 0.618)
 
   重載: (code)->
-    @品種[code] = new Security(this, code, @策略, 池, 0.618)
+    @品種[code] = new Security(this, code, @策略, 0.618)
 
   更新品種:(codes)->
     if codes?
@@ -129,7 +130,7 @@ class Securities
         # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
         if code isnt 'sz'
           @codes.push code
-          @品種[code] = new Security(this, code,@策略, 池, 0.618)
+          @品種[code] = new Security(this, code,@策略,0.618)
       # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
       if code isnt 'sz'
         @品種[code].應對(tick, 回應)
