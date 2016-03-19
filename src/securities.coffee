@@ -1,22 +1,17 @@
-{hists} = require 'sedata'
-# {池} = require 'seyy'
-
 ### 智能化的投資品種,
   根據行情結構,應對最新行情作出相應操作
   將逐步演化完善
   以下代碼等名目,僅僅是用於對接現有的Python接口,將來系統中都可以統一換成中文
 ###
 
-秒 = 1000
-分鐘 = 60*秒
-小時 = 60*分鐘
 
 class Security
-  constructor: (master, @代碼, @策略, @百分比=0.618)->
+  constructor: (master, 代碼, 策略, @百分比=0.618)->
     ### 經過如下處理,@對策 function中的this即此證券品種
     ###
+    @策略 = 策略
     @對策 = @策略.對策
-
+    @代碼 = 代碼
     @策略.定制 master, this, (err,done)->
       unless err?
         console.log "生成",@代碼
