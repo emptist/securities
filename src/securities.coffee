@@ -12,9 +12,9 @@ class Security
     @策略 = 策略
     @對策 = @策略.對策
     @代碼 = 代碼
-    @策略.定制 master, this, (err,done)->
+    @策略.定制 master, this, (err,done)=>
       unless err?
-        console.log "生成",@代碼
+        console.log "生成", @代碼
 
 
   clearIntervals: ->
