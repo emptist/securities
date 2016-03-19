@@ -12,69 +12,14 @@
 小時 = 60*分鐘
 
 class Security
-  constructor: (master, @代碼,@策略,@百分比=0.0618)->
-    池 = @策略.池
-    if @代碼.length < 6
-      console.error "#{@代碼} 代碼不對"
+  constructor: (master, @代碼, @策略, @百分比=0.618)->
     ### 經過如下處理,@對策 function中的this即此證券品種
     ###
     @對策 = @策略.對策
 
-    ### 在此取得行情,準備好天地線和頂底指標,
-      也可在 observer中做.好處是此處不用再改寫.
-      每隔 n分鐘更新一次 n分鐘數據
-    ###
-    代碼 = @代碼
-    hists {symbol: 代碼, type:'m05'},(err,arr)=>
-      if err? or not arr?
-        console.error "securities.coffee >>: #{代碼} 下載5分鐘線", err
-        master.重載(代碼)
-      else
-        if arr.length > 0
-          pool = new 池()
-          @五分鐘線池 = pool.序列(arr)
-          五分鐘線池 = @五分鐘線池
-          updateM05 = ->
-            hists {symbol: 代碼, type:'m05',len:1},(err,arr) ->
-              if err? or not arr?
-                console.error "securities.coffee >>: #{代碼} 更新5分鐘線", err
-              else if arr[0].day isnt 五分鐘線池.燭線[-1..][0].day
-                  #console.log '正在更新五分鐘線池 securities updateM05'
-                  五分鐘線池.新增 arr[0]
-          #@iM05 = setInterval updateM05, 5*分鐘
-          # 測試故將時間縮短
-          @iM05 = setInterval updateM05, 5*分鐘
-        else
-          console.error "securities.coffee >>: #{代碼} 下載5分鐘線", err
-          master.重載(代碼)
-
-
-    # 每一周的週五更新週線數據
-    hists {symbol: @代碼, type:'week',len:1000},(err,arr)=>
-      len = 0
-      if err? or not arr?
-        console.error "securities.coffee >>: #{@代碼} 下載週線", err
-        master.重載(@代碼)
-      else if arr.length > 0
-        pool = new 池()
-        @週線池 = pool.序列(arr)
-        ### 用週線確定所需的行情片段再獲取日線,以免數據太大
-        每隔24小時,在閉市期間更新一次日線數據
-        排查發現個別品種下載數據會出錯
-        ###
-        len = @週線池.求從魚長() #求主魚長()
-      else
-        console.error "securities.coffee >>: #{@代碼} 下載週線", err
-        master.重載(@代碼)
-
-      hists {symbol: @代碼, type:'day',len: len*5},(err,arr)=>
-        if err? or not arr?
-          console.error "securities.coffee >>: #{@代碼} 下載日線 #{len*5}#{@代碼 in master.codes}", err
-          master.重載(@代碼)
-        else if arr.length > 0
-          pool = new 池()
-          @日線池 = pool.序列(arr)
-          #console.log "securities.coffee >>#{@代碼}, 日線池.陰魚.尾.均: #{@日線池.陰魚.尾.均}"
+    @策略.定制 master, this, (err,done)->
+      unless err?
+        console.log "生成",@代碼
 
 
   clearIntervals: ->
@@ -106,10 +51,10 @@ class Securities
     #@策略.準備()
     @品種={}
     for code in @codes
-      @品種[code] = new Security(this, code, @策略, 0.618)
+      @品種[code] = new Security(this, code, @策略)
 
   重載: (code)->
-    @品種[code] = new Security(this, code, @策略, 0.618)
+    @品種[code] = new Security(this, code, @策略)
 
   更新品種:(codes)->
     if codes?
@@ -130,7 +75,7 @@ class Securities
         # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
         if code isnt 'sz'
           @codes.push code
-          @品種[code] = new Security(this, code,@策略,0.618)
+          @品種[code] = new Security(this, code,@策略)
       # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
       if code isnt 'sz'
         @品種[code].應對(tick, 回應)
