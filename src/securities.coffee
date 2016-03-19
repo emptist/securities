@@ -38,46 +38,47 @@ class Security
   根據外部所提供行情,以及預定策略,實時決策操作
 ###
 ###
-  @codes: ['135333','xxdge']
+  @symbols: ['135333','xxdge']
 ###
 class Securities
-  constructor:(@codes, @策略)->
-    #console.log '初始代碼表:', @codes
+  constructor:(@symbols, @策略)->
+    #console.log '初始代碼表:', @symbols
     #@策略.準備()
     @品種={}
-    for code in @codes
-      @品種[code] = new Security(this, code, @策略)
+    for symbol in @symbols
+      @品種[symbol] = new Security(this, symbol, @策略)
 
-  重載: (code)->
-    @品種[code] = new Security(this, code, @策略)
+  重載: (symbol)->
+    @品種[symbol] = new Security(this, symbol, @策略)
 
-  更新品種:(codes)->
-    if codes?
-      for code in codes
-        unless code in @codes
-          ### 須檢測 code 是否正常?
-          #if code.length is 6
+  更新品種:(symbols)->
+    if symbols?
+      for symbol in symbols
+        unless symbol in @symbols
+          ### 須檢測 symbol 是否正常?
+          #if symbol.length is 6
           ###
-          @codes.push code
-          @重載(code)
+          @symbols.push symbol
+          @重載(symbol)
 
   應對: (jso, 回應)->
+    # code 格式: sh600000,sz159915, 此處未用
     # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
-    for k, tick of jso
-      code = tick.代碼
-      unless code in @codes
-        console.log 'securities 應對 新出現 tick.代碼:',code
-        # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
-        if code isnt 'sz'
-          @codes.push code
-          @品種[code] = new Security(this, code,@策略)
-      # 這是臨時使用的限制,由於發現在沒有獲得codes時,會出現'sz','szsz'這些代碼
-      if code isnt 'sz'
-        @品種[code].應對(tick, 回應)
+    for code, tick of jso
+      symbol = tick.代碼
+      unless symbol in @symbols
+        console.log 'securities 應對 新出現 tick.代碼:',symbol
+        # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
+        if symbol isnt 'sz'
+          @symbols.push symbol
+          @品種[symbol] = new Security(this, symbol,@策略)
+      # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
+      if symbol isnt 'sz'
+        @品種[symbol].應對(tick, 回應)
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
-    for each in @codes
+    for each in @symbols
       @品種[each].clearIntervals()
 
 module.exports = Securities
