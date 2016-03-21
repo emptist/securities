@@ -84,15 +84,14 @@ class Securities
           @品種[symbol] = new Security(this, symbol,@策略)
       # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
       if symbol isnt 'sz'
-        @品種[symbol].應對(tick, 回應)
-      ### 剔除不需要繼續跟蹤的品種
-      ###
-      if @position.length > 0
-        unless symbol in @position
-          if @品種[symbol].不可買
-            @symbols.splice(@symbols.indexOf(symbol))
-            delete @品種[symbol]
-
+        ### 剔除不需要繼續跟蹤的品種
+        ###
+        if (@position.length > 0) and not (symbol in @position) and @品種[symbol].不可買
+          @symbols.splice(@symbols.indexOf(symbol))
+          delete @品種[symbol]
+        else
+          @品種[symbol].應對(tick, 回應)
+        
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
     for each in @symbols
