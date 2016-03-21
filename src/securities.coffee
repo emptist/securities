@@ -42,6 +42,7 @@ class Security
 ###
 class Securities
   constructor:(@symbols, @策略)->
+    @清潔 = false
     @position = []
     #console.log '初始代碼表:', @symbols
     #@策略.準備()
@@ -86,12 +87,12 @@ class Securities
       if symbol isnt 'sz'
         ### 剔除不需要繼續跟蹤的品種
         ###
-        if (@position.length > 0) and not (symbol in @position) and @品種[symbol].不可買
+        if @清潔 and (@position.length > 0) and not (symbol in @position) and @品種[symbol].不可買
           @symbols.splice(@symbols.indexOf(symbol))
           delete @品種[symbol]
         else
           @品種[symbol].應對(tick, 回應)
-        
+
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
     for each in @symbols
