@@ -18,7 +18,7 @@ class Security
         console.log "生成", @代碼
 
   clearIntervals: ->
-    for each in [@iM05, @iDay, @iWeek]
+    for each in [@iMin, @iDay, @iWeek]
       clearInterval(each)
 
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
