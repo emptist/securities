@@ -87,10 +87,11 @@ class Securities
         @品種[symbol].應對(tick, 回應)
       ### 剔除不需要繼續跟蹤的品種
       ###
-      unless symbol in @position
-        if @品種[symbol].不可買
-          @symbols.splice(@symbols.indexOf(symbol))
-          delete @品種[symbol]
+      if @position.length > 0
+        unless symbol in @position
+          if @品種[symbol].不可買
+            @symbols.splice(@symbols.indexOf(symbol))
+            delete @品種[symbol]
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
