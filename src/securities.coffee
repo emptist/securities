@@ -12,7 +12,7 @@ class Security
     @策略 = 策略
     @對策 = @策略.對策
     @代碼 = 代碼
-    
+
     @策略.定制 master, this, (err,done)=>
       unless err?
         console.log "生成", @代碼
@@ -90,7 +90,7 @@ class Securities
       unless symbol in @position
         if @品種[symbol].不可買
           @symbols.splice(@symbols.indexOf(symbol))
-          delete 品種[symbol]
+          delete @品種[symbol]
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
