@@ -42,6 +42,7 @@ class Security
 ###
 class Securities
   constructor:(@symbols, @策略)->
+    @position = []
     #console.log '初始代碼表:', @symbols
     #@策略.準備()
     @品種={}
@@ -50,6 +51,15 @@ class Securities
 
   重載: (symbol)->
     @品種[symbol] = new Security(this, symbol, @策略)
+
+  ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
+  ###
+  持倉品種:(symbols)->
+    if symbols?
+      for symbol in symbols
+        unless symbol in @position
+          @position.push symbol
+    @更新品種(symbols)
 
   更新品種:(symbols)->
     if symbols?
@@ -75,6 +85,12 @@ class Securities
       # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回應)
+      ### 剔除不需要繼續跟蹤的品種
+      ###
+      unless symbol in @position
+        if @品種[symbol].不可買
+          @symbols.splice(@symbols.indexOf(symbol))
+          delete 品種[symbol]
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
