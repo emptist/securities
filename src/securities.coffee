@@ -81,6 +81,7 @@ class Securities
       ###
       if @清潔
         if (@position.length > 0)
+          console.log symbol, @position
           if not (symbol in @position)
             if @品種[symbol]?.不可買
               @品種[symbol].clearIntervals()
