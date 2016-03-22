@@ -13,25 +13,20 @@ class Security
     @對策 = @策略.對策
     @代碼 = 代碼
     @就緒 = false
-    
+
     @策略.定制 master, this, (err,done)=>
       unless err?
         @就緒 = true
         console.log "生成", @代碼
+
+  應對: (最新, 回執)->
+    @對策(最新, 回執)
 
   clearIntervals: ->
     for each in @intervals #[@iMin, @iDay, @iWeek]
       clearInterval(each)
 
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
-  ###合適: (回應)->
-    @代碼? and 回應 this
-  止損: (最新, 回應)->
-    @對策(最新, 回應)
-  #為何不行? 應對: @止損
-  ###
-  應對: (最新, 回應)->
-    @對策(最新, 回應)
 
 
 ### 目標證券群
@@ -74,7 +69,8 @@ class Securities
           @symbols.push symbol
           @重載(symbol)
 
-  應對: (jso, 回應)->
+  # jso: 由一組即時行情構成
+  應對: (jso, 回執)->
     # code 格式: sh600000,sz159915, 此處未用
     # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
     for code, tick of jso
@@ -96,7 +92,7 @@ class Securities
           @品種[symbol] = new Security(this, symbol,@策略)
       # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
       if symbol isnt 'sz'
-        @品種[symbol].應對(tick, 回應)
+        @品種[symbol].應對(tick, 回執)
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
