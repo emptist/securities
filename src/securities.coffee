@@ -82,7 +82,7 @@ class Securities
       if @清潔
         if (@position.length > 0)
           if symbol not in @position
-            console.log symbol, @品種[symbol]?.不可買
+            console.log @name, symbol, @品種[symbol].不可買
             if @品種[symbol]?.不可買
               @品種[symbol].clearIntervals()
               delete @品種[symbol]
@@ -94,7 +94,7 @@ class Securities
           # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
           if symbol isnt 'sz'
             @symbols.push symbol
-            @品種[symbol] = new Security(this, symbol,@策略)
+            @品種[symbol] = new Security(this, symbol, @策略)
         # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
         if symbol isnt 'sz'
           @品種[symbol].應對(tick, 回應)
