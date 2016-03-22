@@ -78,26 +78,23 @@ class Securities
     for code, tick of jso
       symbol = tick.代碼
       ### 剔除不需要繼續跟蹤的品種
-      ###
+      # 可能放在此處破壞了某種機制,不行!不要再嘗試了
       if @清潔
-        if (@position.length > 0)
-          if symbol not in @position
-            console.log @name, symbol, @品種[symbol].不可買
-            if @品種[symbol]?.不可買
-              @品種[symbol].clearIntervals()
-              delete @品種[symbol]
-              @symbols.splice(@symbols.indexOf(symbol))
-              console.log "去除#{symbol}"
+        if (@position.length > 0) and not (symbol in @position) and @品種[symbol]?.不可買
+          @品種[symbol].clearIntervals()
+          delete @品種[symbol]
+          @symbols.splice(@symbols.indexOf(symbol))
       else
-        unless symbol in @symbols
-          console.log 'securities 應對 新出現 tick.代碼:',symbol
-          # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
-          if symbol isnt 'sz'
-            @symbols.push symbol
-            @品種[symbol] = new Security(this, symbol, @策略)
+      ###
+      unless symbol in @symbols
+        console.log 'securities 應對 新出現 tick.代碼:',symbol
         # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
         if symbol isnt 'sz'
-          @品種[symbol].應對(tick, 回應)
+          @symbols.push symbol
+          @品種[symbol] = new Security(this, symbol,@策略)
+      # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
+      if symbol isnt 'sz'
+        @品種[symbol].應對(tick, 回應)
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
