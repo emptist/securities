@@ -86,6 +86,7 @@ class Securities
               @品種[symbol].clearIntervals()
               delete @品種[symbol]
               @symbols.splice(@symbols.indexOf(symbol))
+              console.log "去除#{symbol}"
       else
         unless symbol in @symbols
           console.log 'securities 應對 新出現 tick.代碼:',symbol
