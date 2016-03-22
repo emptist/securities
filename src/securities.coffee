@@ -82,7 +82,7 @@ class Securities
       if @清潔
         if (@position.length > 0)
           if symbol not in @position
-            console.log symbol, @品種[symbol], @品種[symbol]?.不可買
+            console.log symbol, @品種[symbol]?.不可買
             if @品種[symbol]?.不可買
               @品種[symbol].clearIntervals()
               delete @品種[symbol]
