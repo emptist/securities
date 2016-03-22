@@ -79,10 +79,13 @@ class Securities
       symbol = tick.代碼
       ### 剔除不需要繼續跟蹤的品種
       ###
-      if @清潔 and (@position.length > 0) and not (symbol in @position) and @品種[symbol]?.不可買
-        @品種[symbol].clearIntervals()
-        delete @品種[symbol]
-        @symbols.splice(@symbols.indexOf(symbol))
+      if @清潔
+        if (@position.length > 0)
+          if not (symbol in @position)
+            if @品種[symbol]?.不可買
+              @品種[symbol].clearIntervals()
+              delete @品種[symbol]
+              @symbols.splice(@symbols.indexOf(symbol))
       else
         unless symbol in @symbols
           console.log 'securities 應對 新出現 tick.代碼:',symbol
