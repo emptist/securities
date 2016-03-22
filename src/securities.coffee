@@ -88,8 +88,9 @@ class Securities
         ### 剔除不需要繼續跟蹤的品種
         ###
         if @清潔 and (@position.length > 0) and not (symbol in @position) and @品種[symbol].不可買
-          @symbols.splice(@symbols.indexOf(symbol))
+          @品種[symbol].clearIntervals()
           delete @品種[symbol]
+          @symbols.splice(@symbols.indexOf(symbol))
         else
           @品種[symbol].應對(tick, 回應)
 
