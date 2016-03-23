@@ -95,6 +95,7 @@ class Securities
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
                 @symbols.splice(@symbols.indexOf(symbol))
+                console.info "securities >> #{symbol} 不可買, 已去除"
 
     return this
 
