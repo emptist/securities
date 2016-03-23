@@ -75,15 +75,8 @@ class Securities
     # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
     for code, tick of jso
       symbol = tick.代碼
-      ### 剔除不需要繼續跟蹤的品種
+      # 剔除不需要繼續跟蹤的品種
       # 可能放在此處破壞了某種機制,不行!不要再嘗試了
-      if @清潔
-        if (@position.length > 0) and not (symbol in @position) and @品種[symbol]?.不可買
-          @品種[symbol].clearIntervals()
-          delete @品種[symbol]
-          @symbols.splice(@symbols.indexOf(symbol))
-      else
-      ###
       unless symbol in @symbols
         console.log 'securities 應對 新出現 tick.代碼:',symbol
         # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
@@ -93,6 +86,16 @@ class Securities
       # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回執)
+
+      if @清潔
+        if (@position.length > 0)
+          if not (symbol in @position)
+            if @品種[symbol]?.不可買
+              @品種[symbol].clearIntervals()
+              delete @品種[symbol]
+              @symbols.splice(@symbols.indexOf(symbol))
+
+    return this
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
