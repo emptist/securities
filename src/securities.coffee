@@ -75,6 +75,17 @@ class Securities
           @symbols.push symbol
           @重載(symbol)
 
+  濾過: (symbol)->
+    if @清潔
+      if @品種[symbol]?.就緒
+        unless @品種[symbol].可觀察
+          if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
+            if symbol not in @position
+              @品種[symbol].clearIntervals()
+              delete @品種[symbol]
+              @symbols.splice(@symbols.indexOf(symbol),1)
+              util.log "securities >> 監控: #{@symbols}"
+
   # jso: 由一組即時行情構成
   應對: (jso, 回執)->
     # code 格式: sh600000,sz159915, 此處未用
@@ -93,16 +104,19 @@ class Securities
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回執)
 
+      @濾過(symbol)
+
+      ###
       if @清潔
         if @品種[symbol]?.就緒
-          if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
-            if symbol not in @position
-              unless @品種[symbol].可觀察
+          unless @品種[symbol].可觀察
+            if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
+              if symbol not in @position
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
                 @symbols.splice(@symbols.indexOf(symbol),1)
-                util.log "securities >> 監控: #{@symbols}" 
-
+                util.log "securities >> 監控: #{@symbols}"
+      ###
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
     for each in @symbols
