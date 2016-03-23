@@ -88,12 +88,13 @@ class Securities
         @品種[symbol].應對(tick, 回執)
 
       if @清潔
-        if (@position.length > 0)
-          if not (symbol in @position)
-            if @品種[symbol]?.不可買
-              @品種[symbol].clearIntervals()
-              delete @品種[symbol]
-              @symbols.splice(@symbols.indexOf(symbol))
+        if @品種[symbol]?.就緒
+          if (@position.length > 0)
+            if not (symbol in @position)
+              if @品種[symbol].不可買
+                @品種[symbol].clearIntervals()
+                delete @品種[symbol]
+                @symbols.splice(@symbols.indexOf(symbol))
 
     return this
 
