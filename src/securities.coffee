@@ -100,7 +100,7 @@ class Securities
               unless @品種[symbol].可觀察
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
-                @symbols.splice(@symbols.indexOf(symbol))
+                @symbols.splice(@symbols.indexOf(symbol),1)
                 console.info "securities >> #{symbol} 無須監控, 已去除"
 
   clearIntervals: ->
