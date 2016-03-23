@@ -89,6 +89,7 @@ class Securities
 
       if @清潔
         if @品種[symbol]?.就緒
+          console.info "securities >> #{symbol} position? ",@position
           if (@position.length > 0)
             if symbol not in @position
               console.info "securities >> #{symbol} 可觀察? ",@品種[symbol].可觀察
