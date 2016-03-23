@@ -40,7 +40,7 @@ class Security
 class Securities
   constructor:(@symbols, @策略)->
     @清潔 = false
-    @position = []
+    @position = null
     #console.log '初始代碼表:', @symbols
     #@策略.準備()
     @品種={}
@@ -55,6 +55,8 @@ class Securities
   持倉品種:(symbols)->
     if symbols?
       for symbol in symbols
+        unless @position?
+          @position = []
         unless symbol in @position
           @position.push symbol
     @更新品種(symbols)
@@ -89,15 +91,13 @@ class Securities
 
       if @清潔
         if @品種[symbol]?.就緒
-          console.info "securities >> #{symbol} position? ",@position
-          if (@position.length > 0)
+          if @position?
             if symbol not in @position
-              console.info "securities >> #{symbol} 可觀察? ",@品種[symbol].可觀察
               unless @品種[symbol].可觀察
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
                 @symbols.splice(@symbols.indexOf(symbol))
-                console.info "securities >> #{symbol} 不可買, 已去除"
+                console.info "securities >> #{symbol} 無須監控, 已去除"
 
   clearIntervals: ->
     console.log 'securities>> clearIntervals'
