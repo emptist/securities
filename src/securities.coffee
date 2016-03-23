@@ -101,7 +101,7 @@ class Securities
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
                 @symbols.splice(@symbols.indexOf(symbol),1)
-                util.log "securities >> 監控", @symbols
+                util.log "securities >> 監控: #{@symbols}" 
 
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
