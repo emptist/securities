@@ -90,7 +90,8 @@ class Securities
       if @清潔
         if @品種[symbol]?.就緒
           if (@position.length > 0)
-            if not (symbol in @position)
+            if symbol not in @position
+              console.info "securities >> #{symbol} 不可買:",@品種[symbol].不可買
               if @品種[symbol].不可買
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
