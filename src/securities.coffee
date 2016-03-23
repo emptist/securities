@@ -17,7 +17,7 @@ class Security
     @策略.定制 master, this, (err,done)=>
       unless err?
         @就緒 = true
-        util.log "securities.coffee >> 生成", @代碼
+        #util.log "securities.coffee >> 生成", @代碼
 
   應對: (最新, 回執)->
     @對策(最新, 回執)
@@ -101,7 +101,7 @@ class Securities
                 @品種[symbol].clearIntervals()
                 delete @品種[symbol]
                 @symbols.splice(@symbols.indexOf(symbol),1)
-                util.log "securities.coffee >> 去除", symbol
+                util.log "securities >> 監控", @symbols
 
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
