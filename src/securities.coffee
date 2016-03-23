@@ -53,10 +53,14 @@ class Securities
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
   ###
   持倉品種:(symbols)->
+    ### @position存在,
+      表明已經匯集了持倉品種,可以執行後續分析
+    ###
+    unless @position?
+      @position = []
+    # 有時是空倉的,所以@position可以為空且須先設置
     if symbols?
       for symbol in symbols
-        unless @position?
-          @position = []
         unless symbol in @position
           @position.push symbol
     @更新品種(symbols)
@@ -91,7 +95,7 @@ class Securities
 
       if @清潔
         if @品種[symbol]?.就緒
-          if @position?
+          if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
             if symbol not in @position
               unless @品種[symbol].可觀察
                 @品種[symbol].clearIntervals()
