@@ -78,13 +78,20 @@ class Securities
   濾過: (symbol)->
     if @清潔
       if @品種[symbol]?.就緒
+        ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
+        *###
         unless @品種[symbol].可觀察
-          if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
-            if symbol not in @position
+          ###* 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
+          *###
+          if @position?
+            ###* 過濾層二. 持倉的品種,即使非可觀察低位品種,也必須留下來,作止盈止損監控
+              其他的,當天都不必跟蹤了
+            *###
+            unless symbol in @position
               @品種[symbol].clearIntervals()
               delete @品種[symbol]
               @symbols.splice(@symbols.indexOf(symbol),1)
-              util.log "securities >> 監控: #{@symbols}"
+              util.log "securities >> 監控範圍#{@symbols.length}個品種: #{@symbols}"
 
   # jso: 由一組即時行情構成
   應對: (jso, 回執)->
