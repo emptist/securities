@@ -86,6 +86,7 @@ class Securities
       for symbol in symbols
         unless symbol in @position
           @position.push symbol
+
     @更新品種(symbols)
 
   更新品種:(symbols)->
@@ -93,14 +94,17 @@ class Securities
       for symbol in symbols
         unless symbol in @symbols
           ### 須檢測 symbol 是否正常?
-          #if symbol.length is 6
-          先加入,發現不需要再去掉
+
+            先加入,發現不需要再去掉
           ###
           @symbols.push symbol
           @生成載入(symbol)
 
-  ###* 已無用,暫時保留,測試有無bug
-  *###
+
+
+  ### 已無用,暫時保留,測試有無bug
+  稍後可刪除
+  ###
   濾過: (symbol)->
     if @清潔
       if @品種[symbol]?.就緒
@@ -119,6 +123,8 @@ class Securities
               @symbols.splice(@symbols.indexOf(symbol),1)
               util.log "securities >> 監控範圍#{@symbols.length}個品種: #{@symbols}"
 
+
+
   忽略: (symbol)->
     ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
     *###
@@ -134,21 +140,17 @@ class Securities
 
   # jso: 由一組即時行情構成
   應對: (jso, 回執)->
-    # code 格式: sh600000,sz159915, 此處未用
-    # 不知為何出現一個代碼為sz的東西,未知bug出現在哪個環節
     for code, tick of jso
       symbol = tick.代碼
-      # 剔除不需要繼續跟蹤的品種
-      # 可能放在此處破壞了某種機制,不行!不要再嘗試了
       unless symbol in @symbols
         util.log 'securities.coffee>> 應對 新出現 tick.代碼:',symbol
-        # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
+        # 這是臨時限制,由於之前secode在沒symbols時,會出現'sz','szsz',已改,暫且保留
         if symbol isnt 'sz'
           @symbols.push symbol
-          @生成載入(symbol)
+          @生成載入(symbol) # 取代了下一行代碼,若有錯,再改回
           #@品種[symbol] = new Security(this, symbol,@策略)
-          
-      # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
+
+      # 這是臨時限制,由於之前secode在沒symbols時,會出現'sz','szsz',已改,暫且保留
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回執)
 
