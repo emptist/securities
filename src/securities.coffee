@@ -14,10 +14,19 @@ class Security
     @代碼 = 代碼
     @就緒 = false
 
+    ###
     @策略.定制 master, this, (err,done)=>
       unless err?
         @就緒 = true
         #util.log "securities.coffee >> 生成", @代碼
+    ###
+
+  init: (回執) =>
+    @策略.定制 master, this, (err,done)=>
+      unless err?
+        @就緒 = true
+        #util.log "securities.coffee >> 生成", @代碼
+        回執(err, done)
 
   應對: (最新, 回執)->
     @對策(最新, 回執)
@@ -45,10 +54,24 @@ class Securities
     #@策略.準備()
     @品種={}
     for symbol in @symbols
-      @品種[symbol] = new Security(this, symbol, @策略)
+      ###
+      證券 = new Security(this, symbol, @策略)
+      證券.init (err,done)->
+        unless err?
+          if done
+            @品種[symbol] = 證券
+      ###
+      @生成載入(symbol)
 
-  重載: (symbol)->
-    @品種[symbol] = new Security(this, symbol, @策略)
+  生成載入: (symbol)->
+    證券 = new Security(this, symbol, @策略)
+    @品種[symbol] = 證券
+    證券.init (err,done)->
+      unless err?
+        if done
+          # 在這裡做清理?
+          console.log 證券
+
 
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
   ###
@@ -73,7 +96,7 @@ class Securities
           #if symbol.length is 6
           ###
           @symbols.push symbol
-          @重載(symbol)
+          @生成載入(symbol)
 
   濾過: (symbol)->
     if @清潔
