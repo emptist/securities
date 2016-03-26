@@ -59,7 +59,7 @@ class Securities
   生成載入: (symbol)->
     證券 = new Security(this, symbol, @策略)
     @品種[symbol] = 證券
-    證券.init this, (err,done)->
+    證券.init this, (err,done)=>
       unless err?
         if done
           # 在這裡做清理?
