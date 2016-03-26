@@ -145,7 +145,9 @@ class Securities
         # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
         if symbol isnt 'sz'
           @symbols.push symbol
-          @品種[symbol] = new Security(this, symbol,@策略)
+          @生成載入(symbol)
+          #@品種[symbol] = new Security(this, symbol,@策略)
+          
       # 這是臨時使用的限制,由於發現在沒有獲得symbols時,會出現'sz','szsz'這些代碼
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回執)
