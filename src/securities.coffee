@@ -64,7 +64,7 @@ class Securities
         if done
           # 在這裡做清理?
           console.log 證券
-          @濾過(代碼)
+          @濾過(symbol)
 
 
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
