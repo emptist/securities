@@ -21,7 +21,7 @@ class Security
         #util.log "securities.coffee >> 生成", @代碼
     ###
 
-  init: (回執) =>
+  init: (master, 回執) =>
     @策略.定制 master, this, (err,done)=>
       unless err?
         @就緒 = true
@@ -66,7 +66,7 @@ class Securities
   生成載入: (symbol)->
     證券 = new Security(this, symbol, @策略)
     @品種[symbol] = 證券
-    證券.init (err,done)->
+    證券.init this, (err,done)->
       unless err?
         if done
           # 在這裡做清理?
