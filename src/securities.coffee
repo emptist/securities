@@ -14,12 +14,6 @@ class Security
     @代碼 = 代碼
     @就緒 = false
 
-    ###
-    @策略.定制 master, this, (err,done)=>
-      unless err?
-        @就緒 = true
-        #util.log "securities.coffee >> 生成", @代碼
-    ###
 
   初始: (master, 回執) =>
     @策略.定制 master, this, (err,done)=>
