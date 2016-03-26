@@ -54,13 +54,6 @@ class Securities
     #@策略.準備()
     @品種={}
     for symbol in @symbols
-      ###
-      證券 = new Security(this, symbol, @策略)
-      證券.init (err,done)->
-        unless err?
-          if done
-            @品種[symbol] = 證券
-      ###
       @生成載入(symbol)
 
   生成載入: (symbol)->
@@ -71,6 +64,7 @@ class Securities
         if done
           # 在這裡做清理?
           console.log 證券
+          濾過(代碼)
 
 
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
@@ -134,19 +128,9 @@ class Securities
       if symbol isnt 'sz'
         @品種[symbol].應對(tick, 回執)
 
-      @濾過(symbol)
+      #@濾過(symbol)
 
-      ###
-      if @清潔
-        if @品種[symbol]?.就緒
-          unless @品種[symbol].可觀察
-            if @position? # 若有此變量,則表明已經匯集好持倉品種,可以執行以下操作
-              if symbol not in @position
-                @品種[symbol].clearIntervals()
-                delete @品種[symbol]
-                @symbols.splice(@symbols.indexOf(symbol),1)
-                util.log "securities >> 監控: #{@symbols}"
-      ###
+
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
     for each in @symbols
