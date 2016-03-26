@@ -21,7 +21,7 @@ class Security
         #util.log "securities.coffee >> 生成", @代碼
     ###
 
-  init: (master, 回執) =>
+  初始: (master, 回執) =>
     @策略.定制 master, this, (err,done)=>
       unless err?
         @就緒 = true
@@ -50,21 +50,27 @@ class Securities
   constructor:(@symbols, @策略)->
     @清潔 = false
     @position = null
-    #util.log '初始代碼表:', @symbols
+    #util.log '首批代碼表:', @symbols
     #@策略.準備()
     @品種={}
     for symbol in @symbols
       @生成載入(symbol)
 
+  ###* 若@清潔 則選擇可觀察或持倉品種,忽略其他
+  *###
   生成載入: (symbol)->
     證券 = new Security(this, symbol, @策略)
+    ###* 先生成,不需要再刪除
+    *###
     @品種[symbol] = 證券
-    證券.init this, (err,done)=>
+    證券.初始 this, (err,done)=>
       unless err?
         if done
-          # 在這裡做清理?
-          console.log 證券
-          @濾過(symbol)
+          if @清潔
+            ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
+            *###
+            unless 證券.可觀察
+              @忽略(symbol)
 
 
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
@@ -88,10 +94,13 @@ class Securities
         unless symbol in @symbols
           ### 須檢測 symbol 是否正常?
           #if symbol.length is 6
+          先加入,發現不需要再去掉
           ###
           @symbols.push symbol
           @生成載入(symbol)
 
+  ###* 已無用,暫時保留,測試有無bug
+  *###
   濾過: (symbol)->
     if @清潔
       if @品種[symbol]?.就緒
@@ -109,6 +118,19 @@ class Securities
               delete @品種[symbol]
               @symbols.splice(@symbols.indexOf(symbol),1)
               util.log "securities >> 監控範圍#{@symbols.length}個品種: #{@symbols}"
+
+  忽略: (symbol)->
+    ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
+    *###
+    if @position?
+      ###* 過濾層二. 持倉的品種,即使非可觀察低位品種,也必須留下來,作止盈止損監控
+        其他的,當天都不必跟蹤了
+      *###
+      unless symbol in @position
+        @品種[symbol].clearIntervals()
+        delete @品種[symbol]
+        @symbols.splice(@symbols.indexOf(symbol),1)
+        util.log "securities >> 監控範圍#{@symbols.length}個品種: #{@symbols}"
 
   # jso: 由一組即時行情構成
   應對: (jso, 回執)->
