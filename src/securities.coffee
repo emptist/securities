@@ -126,7 +126,7 @@ class Securities
           *###
 
           if @品種[symbol].就緒
-            console.log 'here write',@品種
+            #console.log 'here write',@品種
             @品種[symbol].應對(tick, 回執)
           else
             回執 null
