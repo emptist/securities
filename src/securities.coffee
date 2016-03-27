@@ -119,15 +119,18 @@ class Securities
       # 正常情況:
       if symbol in @symbols
         if @品種[symbol]?
-          ###* 如此一來,證券未就緒則不對即時行情作任何反應,會有風險?
+          ###*
+          @品種[symbol].應對(tick, 回執)
+
+          如此一來,證券未就緒則不對即時行情作任何反應,會有風險?
+          *###
 
           if @品種[symbol].就緒
+            console.log 'here write',@品種
             @品種[symbol].應對(tick, 回執)
           else
             回執 null
 
-          *###
-          @品種[symbol].應對(tick, 回執)
 
         else
           @生成載入(tick.代碼, tick.名稱, 回執) # 取代了下一行代碼,若有錯,再改回
