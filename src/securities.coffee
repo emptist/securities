@@ -56,8 +56,7 @@ class Securities
   ###* 若@清潔 則選擇可觀察或持倉品種,忽略其他
   *###
   生成載入: (tick, 回執)->
-    symbol = tick.symbol
-    console.log tick
+    symbol = tick.代碼
     名稱 = tick.名稱
     證券 = new Security(this, symbol, 名稱, @策略)
     ###* 先生成,不需要再刪除
