@@ -6,7 +6,7 @@
 util = require 'util'
 
 class Security
-  constructor: (master, @代碼, @證券名稱, @策略, @百分比=0.618)->
+  constructor: (master, @代碼, @名稱, @策略, @百分比=0.618)->
     ### 經過如下處理,@對策 function中的this即此證券品種
     ###
     @就緒 = false
@@ -57,8 +57,9 @@ class Securities
   *###
   生成載入: (tick, 回執)->
     symbol = tick.symbol
-    證券名稱 = tick.證券名稱
-    證券 = new Security(this, symbol, 證券名稱, @策略)
+    console.log tick
+    名稱 = tick.名稱
+    證券 = new Security(this, symbol, 名稱, @策略)
     ###* 先生成,不需要再刪除
     *###
     @品種[symbol] = 證券
