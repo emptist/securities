@@ -46,26 +46,22 @@ class Securities
     @清潔 = false
     @position = null
     #util.log '首批代碼表:', @symbols
-    #@策略.準備()
     @品種={}
-    ###
-    for symbol in @symbols
-      @生成載入(symbol)
-    ###
 
   ###* 若@清潔 則選擇可觀察或持倉品種,忽略其他
   *###
-  生成載入: (tick, 回執)->
-    symbol = tick.代碼
-    名稱 = tick.名稱
-    證券 = new Security(this, symbol, 名稱, @策略)
+  生成載入: (代碼,名稱, 回執)->
     ###* 先生成,不需要再刪除
     *###
-    @品種[symbol] = 證券
+    證券 = new Security(this, 代碼, 名稱, @策略)
+    @品種[代碼] = 證券
+
     證券.初始 this, (err,done)=>
       ###* 初始設置需要一些時間,tick有可能已經過時了,故沒有操作指令
+        在其他地方使用本法時,不必回執
       *###
-      回執(null)
+      if 回執?
+        回執(null)
 
       unless err?
         if done
@@ -73,7 +69,7 @@ class Securities
             ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
             *###
             unless 證券.可觀察
-              @忽略(symbol)
+              @忽略(代碼)
 
 
 
@@ -102,7 +98,6 @@ class Securities
             先加入,發現不需要再去掉
           ###
           @symbols.push symbol
-          #@生成載入(symbol)
 
   忽略: (symbol)->
     ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
@@ -135,14 +130,14 @@ class Securities
           @品種[symbol].應對(tick, 回執)
 
         else
-          @生成載入(tick, 回執) # 取代了下一行代碼,若有錯,再改回
+          @生成載入(tick.代碼, tick.名稱, 回執) # 取代了下一行代碼,若有錯,再改回
       else
         # 異常情況,理論上不應出現
         util.log 'securities.coffee>> 應對 新出現 tick.代碼:',symbol
         # 這是臨時限制,由於之前secode在沒symbols時,會出現'sz','szsz',已改,暫且保留
         if symbol isnt 'sz'
           @symbols.push symbol
-          @生成載入(tick,回執) # 取代了下一行代碼,若有錯,再改回
+          @生成載入(tick.代碼, tick.名稱, 回執) # 取代了下一行代碼,若有錯,再改回
           #@品種[symbol] = new Security(this, symbol,@策略)
 
   clearIntervals: ->
