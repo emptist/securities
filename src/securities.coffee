@@ -32,6 +32,8 @@ class Security
 
   toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
 
+  為分級A基金: ->
+    /^(1|5)/.test(@代碼[0]) and /A|稳|先/.test(@名稱)
 
 ### 目標證券群
   此處控制系統中同一個策略每一品種僅需一個object
