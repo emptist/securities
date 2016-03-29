@@ -119,7 +119,7 @@ class Securities
         @品種[symbol].clearIntervals()
         delete @品種[symbol]
         @symbols.splice(@symbols.indexOf(symbol),1)
-        util.log "securities >> 監控範圍#{@symbols.length}個品種: #{@symbols}"
+        console.log  "securities >> #{@symbols.length}: #{@symbols}"
 
   # jso: 由一組即時行情構成
   應對組合即時行情: (jso, 回執)->
