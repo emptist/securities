@@ -30,7 +30,7 @@ class Security
     for each in @intervals #[@iMin, @iDay, @iWeek]
       clearInterval(each)
 
-  toString: -> "a Security 代碼: #{@代碼}" 
+  toString: -> "a Security 代碼: #{@代碼}"
 
   為分級A基金: ->
     /^(1|5)/.test(@代碼[0]) and /A|稳|先/.test(@名稱)
@@ -52,7 +52,7 @@ class Security
 class Securities
   constructor:(@symbols, @策略)->
     @清潔 = false
-    @position = null
+    @position = [] #null
     #util.log '首批代碼表:', @symbols
     @品種={}
 
@@ -90,9 +90,12 @@ class Securities
   持倉品種:(symbols)->
     ### @position存在,
       表明已經匯集了持倉品種,可以執行後續分析
-    ###
+
+      思路改變.因多賬戶中或有登錄,或有不登錄,故意@position?作為信號不妥
+
     unless @position?
       @position = []
+    ###
     # 有時是空倉的,所以@position可以為空且須先設置
     if symbols?
       for symbol in symbols
@@ -112,18 +115,17 @@ class Securities
           @symbols.push symbol
 
   忽略: (symbol)->
-    ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
+    ###*
+      過濾層一. 可觀察的超跌低位品種不管他,留下來
+      過濾層二. 持倉的品種,即使非可觀察低位品種,也必須留下來,作止盈止損監控
+      其他的,當天都不必跟蹤了
     *###
-    if @position?
-      ###* 過濾層二. 持倉的品種,即使非可觀察低位品種,也必須留下來,作止盈止損監控
-        其他的,當天都不必跟蹤了
-      *###
-      unless symbol in @position
-        @品種[symbol].clearIntervals()
-        delete @品種[symbol]
-        @symbols.splice(@symbols.indexOf(symbol),1)
-        #console.log "securities >> #{@symbols.length}: #{@symbols}"
-        util.log "securities >> #{@symbols.length}"
+    unless symbol in @position
+      @品種[symbol].clearIntervals()
+      delete @品種[symbol]
+      @symbols.splice(@symbols.indexOf(symbol),1)
+      #console.log "securities >> #{@symbols.length}: #{@symbols}"
+      util.log "securities >> #{@symbols.length}"
 
   # jso: 由一組即時行情構成
   應對組合即時行情: (jso, 回執)->
