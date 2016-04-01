@@ -2,11 +2,15 @@
   "name": "serobot",
   "version": "1.6.7",
   "description": "security robots",
-  "main": "index.js",
+  "main": "securities.coffee",
   "scripts": {
-    "preversion": "coffee -bcmo lib src; git commit -am 'modified and re-build js;'",
-    "postversion": "git push; echo 已經存庫可以發佈",
-    "prepublish": "cd ..; echo 現在發佈",
+    "commit": "npm-run-all patch pub",
+    "prepatch": "git add --all; git commit -am 'modified'",
+    "patch": "npm version patch",
+    "postversion": "git push",
+    "prepub": "echo 已經git push 準備 publish...",
+    "pub": "npm publish ../serobot",
+    "prepublish": "echo 現在發佈...",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

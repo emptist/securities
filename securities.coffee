@@ -7,7 +7,7 @@ util = require 'util'
 
 class Security
   constructor: (master, @代碼, @名稱, @策略, @百分比=0.618)->
-    ### 經過如下處理,@對策 function中的this即此證券品種
+    ### 經過如下處理,@對策 function中的this即此證券
     ###
     @就緒 = false
     @對策 = @策略.對策
@@ -30,7 +30,7 @@ class Security
     for each in @intervals #[@iMin, @iDay, @iWeek]
       clearInterval(each)
 
-  toString: -> "a Security 代碼: #{@代碼}" # "證券品種代碼#{@代碼}"
+  toString: -> "a Security 代碼: #{@代碼}" 
 
   為分級A基金: ->
     /^(1|5)/.test(@代碼[0]) and /A|稳|先/.test(@名稱)
