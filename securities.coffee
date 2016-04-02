@@ -12,9 +12,6 @@ class Security
     @就緒 = false
     @對策 = @策略.對策
 
-    #@策略 = 策略
-    #@代碼 = 代碼
-
 
   初始: (keeper, 回執) =>
     @策略.注入 keeper, this, (err,done)=>
@@ -48,12 +45,15 @@ class Security
 ###
 ###
   @symbols: ['135333','xxdge']
+
+  @symbols 就不要改成中文了,各處用到,改動麻煩,且代碼中文詞很容易碰到,造成混淆
 ###
 class Securities
   constructor:(@symbols, @策略)->
-    @清潔 = false
+    @各券商接口 = []
     @position = [] #null
-    #util.log '首批代碼表:', @symbols
+
+    @清潔 = false
     @品種={}
 
   ###* 若@清潔 則選擇可觀察或持倉品種,忽略其他
