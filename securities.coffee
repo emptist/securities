@@ -17,7 +17,7 @@ class Security
 
 
   初始: (master, 回執) =>
-    @策略.定制 master, this, (err,done)=>
+    @策略.注入 master, this, (err,done)=>
       unless err?
         @就緒 = done
         #util.log "securities.coffee >> 生成", @代碼
