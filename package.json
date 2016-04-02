@@ -1,7 +1,7 @@
 {
-  "name": "serobot",
+  "name": "securities",
   "version": "1.6.12",
-  "description": "security robots",
+  "description": "securities",
   "main": "securities.coffee",
   "scripts": {
     "commit": "npm-run-all patch pub",
@@ -9,18 +9,18 @@
     "patch": "npm version patch",
     "postversion": "git push",
     "prepub": "echo 已經git push 準備 publish...",
-    "pub": "npm publish ../serobot",
+    "pub": "npm publish ../securities",
     "prepublish": "echo 現在發佈...",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emptist/serobot.git"
+    "url": "git+https://github.com/emptist/securities.git"
   },
   "author": "Jigme Ko <jigme1968@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/emptist/serobot/issues"
+    "url": "https://github.com/emptist/securities/issues"
   },
-  "homepage": "https://github.com/emptist/serobot#readme"
+  "homepage": "https://github.com/emptist/securities#readme"
 }

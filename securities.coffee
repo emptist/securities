@@ -6,7 +6,7 @@
 util = require 'util'
 
 class Security
-  constructor: (master, @代碼, @名稱, @策略, @百分比=0.618)->
+  constructor: (keeper, @代碼, @名稱, @策略, @百分比=0.618)->
     ### 經過如下處理,@對策 function中的this即此證券
     ###
     @就緒 = false
@@ -16,8 +16,8 @@ class Security
     #@代碼 = 代碼
 
 
-  初始: (master, 回執) =>
-    @策略.注入 master, this, (err,done)=>
+  初始: (keeper, 回執) =>
+    @策略.注入 keeper, this, (err,done)=>
       unless err?
         @就緒 = done
         #util.log "securities.coffee >> 生成", @代碼
