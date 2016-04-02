@@ -133,30 +133,21 @@ class Securities
       symbol = tick.代碼
       # 正常情況:
       if symbol in @symbols
-        if @品種[symbol]?
-          ###*
-          @品種[symbol].應對(tick, 回執)
-
-          如此一來,證券未就緒則不對即時行情作任何反應,會有風險?
-          *###
-
+        unless @品種[symbol]?
+          @生成載入(tick.代碼, tick.名稱, 回執)
+        else
           if @品種[symbol].就緒
-            #console.log 'here write',@品種
             @品種[symbol].應對(tick, 回執)
           else
             回執 null
 
-
-        else
-          @生成載入(tick.代碼, tick.名稱, 回執) # 取代了下一行代碼,若有錯,再改回
       else
-        # 異常情況,理論上不應出現
+        # 異常情況,理論上不應出現,但可能是因為網絡關係,時有出現
         util.log 'securities.coffee>> 應對 新出現 tick.代碼:',symbol
         # 這是臨時限制,由於之前secode在沒symbols時,會出現'sz','szsz',已改,暫且保留
         if symbol isnt 'sz'
           @symbols.push symbol
-          @生成載入(tick.代碼, tick.名稱, 回執) # 取代了下一行代碼,若有錯,再改回
-          #@品種[symbol] = new Security(this, symbol,@策略)
+          @生成載入(tick.代碼, tick.名稱, 回執)
 
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
