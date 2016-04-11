@@ -159,11 +159,11 @@ class Securities
 
       else
         # 異常情況,理論上不應出現,但可能是因為網絡關係,時有出現
-        util.log 'securities.coffee>> 應對 新出現 tick.代碼:',symbol
         # 這是臨時限制,由於之前secode在沒symbols時,會出現'sz','szsz',已改,暫且保留
         if symbol isnt 'sz'
           @symbols.push symbol
           @生成載入(tick.代碼, tick.名稱, 回執)
+          util.log 'securities.coffee>> 應對 新出現 tick.代碼:',@品種[symbol]
 
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
