@@ -163,7 +163,7 @@ class Securities
         if symbol isnt 'sz'
           @symbols.push symbol
           @生成載入(tick.代碼, tick.名稱, 回執)
-          util.log 'securities.coffee>> 應對 新出現 tick.代碼:',@品種[symbol]
+          util.log 'securities.coffee>> 應對 新出現 tick.代碼:',symbol, @品種[symbol]
 
   clearIntervals: ->
     util.log 'securities>> clearIntervals'
