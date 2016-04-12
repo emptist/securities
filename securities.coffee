@@ -81,7 +81,6 @@ class Securities
     證券 = new Security(this, 代碼, 名稱, @策略)
     @品種[代碼] = 證券
 
-    
     組合管家 = this
     證券.策略.注入初始數據 組合管家, 證券, (err,done)->
       ###* 初始設置需要一些時間,tick有可能已經過時了,故沒有操作指令
@@ -113,9 +112,9 @@ class Securities
         unless symbol in @position
           @position.push symbol
 
-    @更新品種(symbols)
+    @更新證券表(symbols)
 
-  更新品種:(symbols)->
+  更新證券表:(symbols)->
     if symbols?
       for symbol in symbols
         unless symbol in @symbols
