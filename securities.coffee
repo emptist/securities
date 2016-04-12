@@ -12,7 +12,7 @@ class Security
     @就緒 = false
     @對策 = @策略.對策
 
-
+  # 僅在`生成載入`中使用
   初始: (keeper, 回執) =>
     @策略.注入 keeper, this, (err,done)=>
       unless err?
@@ -81,7 +81,19 @@ class Securities
     證券 = new Security(this, 代碼, 名稱, @策略)
     @品種[代碼] = 證券
 
-    證券.初始 this, (err,done)=>
+    # 僅在`生成載入`中使用
+    初始 = (回執)->
+      證券.策略.注入 this, 證券, (err,done)->
+        unless err?
+          證券.就緒 = done
+          #util.log "securities.coffee >> 生成", @代碼
+          回執(err, done)
+
+    #證券.初始 this, (err,done)=>
+    #初始 (err,done)=>
+    
+    組合管家 = this
+    證券.策略.注入 this, 證券, (err,done)->
       ###* 初始設置需要一些時間,tick有可能已經過時了,故沒有操作指令
         在其他地方使用本法時,不必回執
       *###
@@ -89,8 +101,9 @@ class Securities
         回執(null)
 
       unless err?
+        證券.就緒 = done
         if done
-          if @清潔
+          if 組合管家.清潔
             ###* 過濾層一. 可觀察的超跌低位品種不管他,留下來
             *###
             unless 證券.可觀察
@@ -104,14 +117,6 @@ class Securities
   ### 從券商賬戶讀取的持倉品種,必須繼續跟蹤,以便止盈止損
   ###
   持倉品種:(symbols)->
-    ### @position存在,
-      表明已經匯集了持倉品種,可以執行後續分析
-
-      思路改變.因多賬戶中或有登錄,或有不登錄,故意@position?作為信號不妥
-
-    unless @position?
-      @position = []
-    ###
     # 有時是空倉的,所以@position可以為空且須先設置
     if symbols?
       for symbol in symbols
@@ -124,10 +129,7 @@ class Securities
     if symbols?
       for symbol in symbols
         unless symbol in @symbols
-          ### 須檢測 symbol 是否正常?
-
-            先加入,發現不需要再去掉
-          ###
+          # 先將之加入,發現不需要再去掉(須檢測 symbol 是否正常?)
           @symbols.push symbol
 
   忽略: (symbol)->
