@@ -14,7 +14,7 @@ class Security
 
   # 僅在`生成載入`中使用
   初始: (keeper, 回執) =>
-    @策略.注入 keeper, this, (err,done)=>
+    @策略.注入初始數據 keeper, this, (err,done)=>
       unless err?
         @就緒 = done
         #util.log "securities.coffee >> 生成", @代碼
@@ -83,7 +83,7 @@ class Securities
 
     # 僅在`生成載入`中使用
     初始 = (回執)->
-      證券.策略.注入 this, 證券, (err,done)->
+      證券.策略.注入初始數據 this, 證券, (err,done)->
         unless err?
           證券.就緒 = done
           #util.log "securities.coffee >> 生成", @代碼
@@ -93,7 +93,7 @@ class Securities
     #初始 (err,done)=>
 
     組合管家 = this
-    證券.策略.注入 組合管家, 證券, (err,done)->
+    證券.策略.注入初始數據 組合管家, 證券, (err,done)->
       ###* 初始設置需要一些時間,tick有可能已經過時了,故沒有操作指令
         在其他地方使用本法時,不必回執
       *###
