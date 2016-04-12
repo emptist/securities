@@ -111,7 +111,6 @@ class Securities
       for symbol in symbols
         unless symbol in @position
           @position.push symbol
-
     @更新證券表(symbols)
 
   更新證券表:(symbols)->
